@@ -35,5 +35,17 @@ pipeline {
                 sh 'docker push shivammalikdocker/todo-app:latest'
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@172.31.14.137 "
+                cd ~/production-ready-devops-pipeline/kubernetes &&
+                kubectl apply -f deployment.yml &&
+                kubectl apply -f service.yml
+                "
+                '''
+            }
+        }
     }
 }
